@@ -13,11 +13,12 @@ public class Main {
 
         for(int i = 0; i < number; i++) {
             String input = br.readLine();
-            String fruit = input.split(" ")[0];
-            int cnt = Integer.parseInt(input.split(" ")[1]);
+            String[] parts = input.split(" ");
+            String fruit = parts[0];
+            int cnt = Integer.parseInt(parts[1]);
 
-            int currentCount = fruitsMap.getOrDefault(fruit, 0);
-            fruitsMap.put(fruit, currentCount + cnt);
+            int currentCount = fruitsMap.getOrDefault(fruit, 0) + cnt;
+            fruitsMap.put(fruit, currentCount);
         }
 
 
