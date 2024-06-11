@@ -8,26 +8,29 @@ import java.util.StringTokenizer;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-        StringBuilder ans = new StringBuilder();
-        int TC = Integer.parseInt(br.readLine());
+       
+        StringBuilder sb = new StringBuilder();
+        int cases = Integer.parseInt(br.readLine());
 
-        for(int t=1; t<=TC; t++) {
-            int N = Integer.parseInt(br.readLine());
-            st = new StringTokenizer(br.readLine());
+        for(int i = 0; i < cases; i++) {
+            int num = Integer.parseInt(br.readLine());
+            StringTokenizer st = new StringTokenizer(br.readLine());
             PriorityQueue<Long> pq = new PriorityQueue<>();
-            for(int i=0; i<N; i++) {
+            
+            for(int j = 0; j < num; j++) {
                 pq.add(Long.parseLong(st.nextToken()));
             }
-            long sum = 0;
+            
+            long total = 0;
             while(pq.size() > 1) {
                 long x = pq.poll();
                 long y = pq.poll();
-                sum += x+y;
-                pq.add(x+y);
+                long sum = x + y;
+                total += sum;
+                pq.add(sum);
             }
-            ans.append(sum + "\n");
+            sb.append(total + "\n");
         }
-        System.out.printf(ans.toString());
+        System.out.printf(sb.toString());
     }
 }
