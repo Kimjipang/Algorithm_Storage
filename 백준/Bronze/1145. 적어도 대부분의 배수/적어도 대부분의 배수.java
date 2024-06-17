@@ -14,20 +14,18 @@ public class Main {
             naturalNum[i] = Integer.parseInt(st.nextToken());
         }
 
-        int result = 0;
-        int count = 0;
+        int result = 1;
         while(true) {
-            result++;
-
+            int count = 0;
             for(int i = 0; i < 5; i++) {
-                if(result >= naturalNum[i] && (result % naturalNum[i]) == 0) {
+                if(result % naturalNum[i] == 0) {
                     count++;
                 }
             }
             if(count > 2) {
                 break;
             }
-            count = 0;
+            result++;
         }
         System.out.println(result);
 
