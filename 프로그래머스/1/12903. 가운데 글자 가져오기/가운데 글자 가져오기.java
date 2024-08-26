@@ -1,8 +1,9 @@
 class Solution {
     public String solution(String s) {
-        if(s.length() % 2 != 0)
-            return s.substring(s.length() / 2, s.length() / 2 + 1);
-         
-        return s.substring(s.length() / 2 - 1, s.length() / 2 + 1);
+        String answer = "";
+        int len = s.length();
+        int half_len = len / 2;
+        answer = (len % 2 == 0) ? s.substring(half_len - 1, half_len + 1) : s.substring(half_len, half_len + 1);
+        return answer;
     }
 }
