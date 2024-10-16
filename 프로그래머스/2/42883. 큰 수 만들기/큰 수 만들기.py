@@ -9,14 +9,10 @@ def solution(number, k):
             stack.pop()
             k -= 1
         stack.append(num) 
-        # 9
-        # 9, 3 / k = 2
-        # 9, 9 / k = 1
-        # 9, 9, 3 / k = 1
-        # 9, 9, 9 / k = 0
-    
+
     if k != 0:
         stack = stack[:-k]
+        
     answer = ''.join(stack)
     
     return answer
