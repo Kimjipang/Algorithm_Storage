@@ -5,26 +5,30 @@ def solution(maps):
     return answer
 
 def bfs(maps):
-    dx = [0, 0, -1, 1]
-    dy = [-1, 1, 0, 0]
-    n, m = len(maps), len(maps[0])
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
+    
+    n = len(maps)
+    m = len(maps[0])
+    
     visited = set()
-    visited.add((0, 0)) 
-    queue = deque([(0, 0, 1)]) 
+    queue = deque([(0, 0, 1)])
+    visited.add((0,0))
     
     while queue:
-        y, x, count = queue.popleft()
+        x, y, count = queue.popleft()
         
-        if y == n - 1 and x == m - 1:
+        if x == n - 1 and y == m - 1:
             return count
         
+        
         for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
+            cur_x = x + dx[i]
+            cur_y = y + dy[i]
             
-            if 0 <= nx < m and 0 <= ny < n and maps[ny][nx] == 1:
-                if (ny, nx) not in visited: 
-                    visited.add((ny, nx))
-                    queue.append((ny, nx, count + 1))
-    
+            if 0 <= cur_x < n and 0 <= cur_y < m and maps[cur_x][cur_y] == 1:
+                if (cur_x, cur_y) not in visited:
+                    visited.add((cur_x, cur_y))
+                    queue.append((cur_x, cur_y, count + 1))
     return -1
+                    
