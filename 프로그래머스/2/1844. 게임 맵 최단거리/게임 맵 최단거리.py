@@ -1,34 +1,33 @@
 from collections import deque
 
 def solution(maps):
-    answer = bfs(maps)
-    return answer
+    answer = -1
 
-def bfs(maps):
-    dx = [-1, 1, 0, 0]
-    dy = [0, 0, -1, 1]
-    
     n = len(maps)
     m = len(maps[0])
+
+    dx = [0, 0, -1, 1]
+    dy = [-1, 1, 0, 0]
     
     visited = set()
-    queue = deque([(0, 0, 1)])
+    queue = deque()
+    
     visited.add((0,0))
+    queue.append((0, 0, 1))
     
     while queue:
-        x, y, count = queue.popleft()
+        x, y, cnt = queue.popleft()
         
-        if x == n - 1 and y == m - 1:
-            return count
-        
+        if (x, y) == (n - 1, m - 1):
+            return cnt
         
         for i in range(4):
-            cur_x = x + dx[i]
-            cur_y = y + dy[i]
-            
-            if 0 <= cur_x < n and 0 <= cur_y < m and maps[cur_x][cur_y] == 1:
-                if (cur_x, cur_y) not in visited:
-                    visited.add((cur_x, cur_y))
-                    queue.append((cur_x, cur_y, count + 1))
-    return -1
-                    
+            next_x = x + dx[i]
+            next_y = y + dy[i]
+            if 0 <= next_x < n and 0 <= next_y < m and maps[next_x][next_y] == 1:
+                
+                if (next_x, next_y) not in visited:
+                    visited.add((next_x, next_y))
+                    queue.append([next_x, next_y, cnt + 1])
+        
+    return answer
