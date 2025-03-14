@@ -17,7 +17,6 @@ class Solution {
                           {2, 1, 2, 3, 2, 4, 2, 5},
                          {3, 3, 1, 1, 2, 2, 4, 4, 5, 5}};
         
-        // 문제가 8문제라면? 
         for (int i = 0; i < 3; i++) {
             int num = people[i].length;
             int count = 0;
@@ -38,11 +37,8 @@ class Solution {
     private static List<Integer> countBestScorer(int[] result) {
         // 3개 중에서 제일 높은 숫자를 찾은 후에 다시 처음부터 비교해서 카운트를 세
         List<Integer> list = new ArrayList<>();
-        int num = -1;
         
-        for (int i = 0; i < 3; i++) {
-            num = Math.max(result[i], num);
-        }
+        int num = Arrays.stream(result).max().orElse(-1);
         
         for (int i = 0; i < 3; i++) {
             if (num == result[i]) {
