@@ -11,17 +11,9 @@ class Solution {
         
         for (int i = 0; i < len; i++) {
             char ch = s.charAt(i);
-            if (stack.isEmpty()) {
-                stack.addLast(ch);
-            }
-            else {
-                if (stack.peekLast() == ch) {
-                    stack.pollLast();
-                }
-                else {
-                    stack.addLast(ch);
-                }
-            }
+            
+            if (!stack.isEmpty() && stack.peekLast() == ch) stack.pollLast();
+            else stack.addLast(ch);
         }
         
         if (stack.isEmpty()) return 1;
