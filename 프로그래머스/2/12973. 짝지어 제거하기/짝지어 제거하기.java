@@ -2,28 +2,30 @@ import java.util.*;
 
 class Solution {
     public int solution(String s) {
+        /*
+        s가 최대 1,000,000이기에 O(N^2)는 안됨.
+        */
         int answer = 0;
+        int len = s.length();
+        ArrayDeque<Character> stack = new ArrayDeque<>();
         
-        char[] arr = s.toCharArray();
-        Stack<Character> stack = new Stack<>();
-        
-        for (int i = 0; i < arr.length; i++) {
-            if (!stack.isEmpty()) {
-                if (stack.peek() == arr[i]) {
-                    stack.pop();
-                }
-                else {
-                    stack.push(arr[i]);
-                }
+        for (int i = 0; i < len; i++) {
+            char ch = s.charAt(i);
+            if (stack.isEmpty()) {
+                stack.addLast(ch);
             }
             else {
-                stack.push(arr[i]);
+                if (stack.peekLast() == ch) {
+                    stack.pollLast();
+                }
+                else {
+                    stack.addLast(ch);
+                }
             }
         }
         
-        if (stack.size() == 0) {
-            answer = 1;
-        }
+        if (stack.isEmpty()) return 1;
+        
         return answer;
     }
 }
