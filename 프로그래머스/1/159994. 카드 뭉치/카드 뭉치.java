@@ -10,15 +10,8 @@ class Solution {
         2-1. 없으면 바로 "No" 반환
         2-2. 있으면 순회 이후 "Yes" 반환
         */ 
-        ArrayDeque<String> card1 = new ArrayDeque<>(); // cards1 큐로 초기화
-        for (String str : cards1) {
-            card1.addLast(str);
-        }
-        
-        ArrayDeque<String> card2 = new ArrayDeque<>(); // cards2 큐로 초기화
-        for (String str : cards2) {
-            card2.addLast(str);
-        }
+        ArrayDeque<String> card1 = new ArrayDeque<>(Arrays.asList(cards1)); // cards1 큐로 초기화
+        ArrayDeque<String> card2 = new ArrayDeque<>(Arrays.asList(cards2)); // cards2 큐로 초기화
         
         for (String str : goal) {
             String card1_word = card1.peekFirst();
