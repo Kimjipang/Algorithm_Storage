@@ -10,7 +10,7 @@ class Solution {
         2. 
         */
         int n = record.length;
-        List<String> list = new ArrayList<>();
+        List<String> answer = new ArrayList<>();
         
         Map<String, String> member = new HashMap<>();
         
@@ -25,16 +25,13 @@ class Solution {
         for (int i = 0; i < n; i++) {
             String[] log = record[i].split(" ");
             if (log[0].equals("Enter")) {
-                list.add(member.get(log[1]) + "님이 들어왔습니다.");
+                answer.add(member.get(log[1]) + "님이 들어왔습니다.");
             }
             else if (log[0].equals("Leave")) {
-                list.add(member.get(log[1]) + "님이 나갔습니다.");
+                answer.add(member.get(log[1]) + "님이 나갔습니다.");
             }
         }
         
-        String[] answer = list.stream()
-                                .toArray(String[]::new);
-        
-        return answer;
+        return answer.toArray(new String[0]);
     }
 }
