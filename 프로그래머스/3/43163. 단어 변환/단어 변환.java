@@ -1,58 +1,57 @@
 import java.util.*;
 
-
 class Solution {
-    
-    static boolean[] visited;
+    static ArrayDeque<String[]> queue;
+    static Map<String, Integer> visited;
     
     public int solution(String begin, String target, String[] words) {
         int answer = 0;
-        
-        visited = new boolean[words.length];
-        
-        answer = bfs(words, begin, target);
+        answer = bfs(begin, target, words);
         
         return answer;
     }
-    private static int bfs(String[] words, String begin, String target) {
-        Queue<String> queue = new LinkedList<>();
-        queue.add(begin);
+    
+    private int bfs(String begin, String target, String[] words) {
+        int n = words.length;
         
-        int count = 0;
+        queue = new ArrayDeque<>();
+        visited = new HashMap<>();
+        
+        queue.addLast(new String[] {begin, "0"});
+        visited.put(begin, 1);
         
         while (!queue.isEmpty()) {
-            int size = queue.size();
-            int words_len = words.length;
+            String[] arr = queue.pollFirst();
+            String from = arr[0];
+            int num = Integer.parseInt(arr[1]);
             
-            for (int i = 0; i < size; i++) {
-                String cur = queue.poll();
-                if (cur.equals(target)) {
-                    System.out.println(count);
-                    return count;
-                }
-                
-                for (int j = 0; j < words_len; j++) {
-                    if (!visited[j] && possibleConvert(cur, words[j])) {
-                        queue.add(words[j]);
-                        visited[j] = true;
-                    }
+            if (from.equals(target)) {
+                return num;
+            }
+            
+            for (int i = 0; i < n; i++) {
+                String to = words[i];
+                if (!visited.containsKey(to) && isConvertable(from, to)) {
+                    queue.addLast(new String[] {to, String.valueOf(num + 1)});
+                    visited.put(to, 1);
                 }
             }
-            count++;
         }
         return 0;
     }
-    private static boolean possibleConvert(String begin, String target) {
-        int len = begin.length();
-        int diff_count = 0;
-        for (int i = 0; i < len; i++) {
-            if (!begin.substring(i, i+1).equals(target.substring(i, i+1))) {
-                diff_count++;
+    
+    private boolean isConvertable(String from, String to) {
+        int n = from.length();
+        int num = 0;
+        
+        for (int i = 0; i < n; i++) {
+            if (from.charAt(i) != to.charAt(i)) {
+                num += 1;
             }
         }
-        if (diff_count == 1) {
-            return true;
-        }
+        
+        if (num == 1) return true;
+        
         return false;
     }
 }
