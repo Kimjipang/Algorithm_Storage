@@ -4,8 +4,9 @@ class Solution {
     private static int[] parent;
     
     private static int find(int x) {
-        if (parent[x] == x)
+        if (parent[x] == x) 
             return x;
+        
         return parent[x] = find(parent[x]);
     }
     
@@ -14,27 +15,29 @@ class Solution {
         int root2 = find(y);
         parent[root2] = root1;
     }
+    
     public int solution(int n, int[][] costs) {
         Arrays.sort(costs, (o1, o2) -> Integer.compare(o1[2], o2[2]));
         
         parent = new int[n];
         
+        int answer = 0;
+        int edge = 0;
+        
         for (int i = 0; i < n; i++) {
             parent[i] = i;
         }
         
-        int answer = 0;
-        int edges = 0;
-        
-        for (int[] edge : costs) {
-            if (edges == n - 1) {
+        for (int[] cost : costs) {
+            if (edge == n - 1) {
                 break;
             }
-        
-            if (find(edge[0]) != find(edge[1])) {
-                union(edge[0], edge[1]);
-                answer += edge[2];
-                edges++;
+            
+            if (find(cost[0]) != find(cost[1])) {
+                union(cost[0], cost[1]);
+                
+                answer += cost[2];
+                edge++;
             }
         }
         return answer;
