@@ -1,50 +1,58 @@
 import java.util.*;
 
 class Solution {
-    private static ArrayDeque<int[]> queue;
-    private static boolean[][] visited;
+    private static ArrayDeque<Node> queue;
+    private static int[][] visited;
+    
+    private static class Node {
+        int x;
+        int y;
+        int count;
+        
+        public Node(int x, int y, int count) {
+            this.x = x;
+            this.y = y;
+            this.count = count;
+        }
+    }
     
     private static int bfs(int[][] maps) {
-        int n = maps.length;
-        int m = maps[0].length;
-        
         int[] dx = {-1, 1, 0, 0};
         int[] dy = {0, 0, -1, 1};
         
+        int n = maps.length;
+        int m = maps[0].length;
         queue = new ArrayDeque<>();
-        visited = new boolean[n][m];
+        visited = new int[n][m];
         
-        queue.addLast(new int[] {0, 0, 1});
-        visited[0][0] = true;
+        queue.addLast(new Node(0, 0, 1));
+        visited[0][0] = 1;
         
         while (!queue.isEmpty()) {
-            int[] arr = queue.pollFirst();
-            
-            int curX = arr[0];
-            int curY = arr[1];
-            int count = arr[2];
-            
-            if (curX == n - 1 && curY == m - 1)
-                return count;
+            Node node = queue.pollFirst();
+            int curX = node.x;
+            int curY = node.y;
+            int curCount = node.count;
+            if (curX == n - 1 && curY == m - 1) return curCount;
             
             for (int i = 0; i < 4; i++) {
                 int nextX = curX + dx[i];
                 int nextY = curY + dy[i];
                 
                 if (nextX >= 0 && nextY >= 0 && nextX < n && nextY < m) {
-                    if (!visited[nextX][nextY] && maps[nextX][nextY] == 1) {
-                        visited[nextX][nextY] = true;
-                        queue.addLast(new int[] {nextX, nextY, count + 1});
+                    if (maps[nextX][nextY] == 1 && visited[nextX][nextY] == 0) {
+                        queue.addLast(new Node(nextX, nextY, curCount + 1));
+                        visited[nextX][nextY] = 1;
                     }
                 }
             }
         }
         
         return -1;
+        
     }
     public int solution(int[][] maps) {
         int answer = 0;
-        
         answer = bfs(maps);
         return answer;
     }
