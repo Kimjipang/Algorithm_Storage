@@ -1,65 +1,67 @@
 import java.util.*;
 
 class Solution {
-    static ArrayList<ArrayList<Node>> list;
-    static int cnt;
+    private static ArrayList<int[]>[] adjList;
+    private static int[] dist;
     
-    class Node {
-        int x, y, z;
+    private static void calculateDist() {
+        PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o1[1], o2[1]));
         
-        Node(int x, int y, int z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+        pq.add(new int[] {1, 0});
+        dist[1] = 0;
+        
+        while (!pq.isEmpty()) {
+            int[] arr = pq.poll();
+            int dest = arr[0];
+            int cost = arr[1];
+            
+            if (dist[dest] < cost) {
+                continue;
+            }
+            
+            for (int[] next : adjList[dest]) {
+                if (dist[next[0]] > cost + next[1]) {
+                    dist[next[0]] = cost + next[1];
+                    pq.add(new int[] {next[0], dist[next[0]]});
+                }
+            }
         }
     }
-    
     public int solution(int N, int[][] road, int K) {
+        /*
+        N은 최대 50
+        road 최대 2,000
+        
+        1. 인접리스트 만들어서 각 마을까지 걸리는 시간을 Integer.MaxValue()로 잡는다
+        2. 다이렉트로 마을에 갈 수 있는 방법과 건너 갈 수 있는 방법 중 더 작은 것으로 값을 바꾼다.
+        3. K보다 작으면 count++ 하고 최종 반환
+        */
+        
         int answer = 0;
-        int len = road.length;
+        adjList = new ArrayList[N + 1];
+        dist = new int[N + 1];
         
-        cnt = 1;
-        
-        list = new ArrayList<>();
-        int[] visited = new int[N + 1];
+        int n = road.length;
         
         for (int i = 0; i <= N; i++) {
-            list.add(new ArrayList<>());
+            adjList[i] = new ArrayList<>();
         }
         
-        for (int i = 0; i < len; i++) {
-            list.get(road[i][0]).add(new Node(road[i][0], road[i][1], road[i][2]));
-            list.get(road[i][1]).add(new Node(road[i][1], road[i][0], road[i][2]));
+        for (int i = 0; i < n; i++) {
+            adjList[road[i][0]].add(new int[] {road[i][1], road[i][2]});
+            adjList[road[i][1]].add(new int[] {road[i][0], road[i][2]});
         }
         
-        bfs(N, K, visited);
+        Arrays.fill(dist, Integer.MAX_VALUE);
         
-        answer = cnt;
+        calculateDist();
+        
+        for (int num : dist) {
+            if (num <= K) {
+                answer++;
+            }
+        }
         
         return answer;
-    }
-    private static void bfs(int N, int K, int[] visited) {
-        Queue<Node> queue = new LinkedList<>();
-        
-        for (int i = 2; i < visited.length; i++) {
-            visited[i] = Integer.MAX_VALUE;
-        }
-        
-        queue.addAll(list.get(1));
-        
-        while(!queue.isEmpty()) {
-            Node node = queue.poll();
-            
-            if(!(visited[node.y] <= visited[node.x] + node.z)) {
-                visited[node.y] = visited[node.x] + node.z;
-                queue.addAll(list.get(node.y));
-            }
-        }
-        
-        for (int i = 2; i < N + 1; i++) {
-            if (visited[i] <= K) {
-                cnt++;
-            }
-        }
     }
 }
