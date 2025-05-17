@@ -35,9 +35,9 @@ class Solution {
         
         sortedGenres.forEach(entry -> {
             Stream<int[]> sortedSongs = playMap.get(entry.getKey())
-                            .stream()
-                            .sorted((o1, o2) -> Integer.compare(o2[1], o1[1]))
-                            .limit(2);
+                                .stream()
+                                .sorted((o1, o2) -> Integer.compare(o2[1], o1[1]))
+                                .limit(2);
             
             sortedSongs.forEach(song -> answer.add(song[0]));
         });
