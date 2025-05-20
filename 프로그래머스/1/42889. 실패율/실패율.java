@@ -1,41 +1,54 @@
 import java.util.*;
 
 class Solution {
+    private static HashMap<Integer, Integer> rate;
+    private static HashMap<Integer, Double> rank;
+    private static int[] answer;
+    private static int challenger;
+    
+    private static int[] calculateRate(int N, int[] stages) {
+        rate = new HashMap<>();
+        rank = new HashMap<>();
+        
+        // 실패횟수 초기화
+        for (int stage : stages) {
+            rate.put(stage, rate.getOrDefault(stage, 0) + 1);
+        }
+        
+        // 스테이지별 실패율 초기화
+        for (int i = 1; i <= N; i++) {
+            if (rate.containsKey(i)) {
+                int loser = rate.get(i);
+                rank.put(i, (double) loser / challenger);
+                challenger -= loser;
+            }
+            else rank.put(i, 0.0);
+        }
+        
+        return rank.entrySet().stream()
+                            .sorted((o1, o2) -> 
+                            o1.getValue().equals(o2.getValue()) 
+                            ? Integer.compare(o1.getKey(), o2.getKey()) 
+                            : Double.compare(o2.getValue(), o1.getValue()))
+                            .mapToInt(HashMap.Entry::getKey)
+                            .toArray();
+        
+    }
+    
     public int[] solution(int N, int[] stages) {
         /*
-        실패율 -> 스테이지에 도달했으나 아직 클리어하지 못한 플레이어의 수 / 스테이지에 도달한 플레이어 수
-        실패율이 높은 스테이지 순서대로 반환, 실패율 같은 스테이지는 오름차순
+        stages의 최대 길이 200,000이기 때문에 O(N^2) 미만으로 시간복잡도 잡아야 함.
+        [풀이]
+        해시맵으로 각 스테이지별 실패 횟수를 구함.
+        스테이지에 머물러 있으면 그 스테이지에 대한 실패 횟수이기에 /8을 하면 실패율이 나옴.
         
-        stages의 길이가 200,000이므로 O(N^2)로 하면 절대 안 됨.
+        실패율이 담긴 map을 내림차순 정렬함.
+        map을 순회하면서 key를 가져오고 그걸 배열에 넣음. 
         */
+        challenger = stages.length;
         
-        // 스테이지별 도전자 수 계산
-        int[] challengers = new int[N + 2];
+        answer = calculateRate(N, stages);
         
-        for (int stage : stages) {
-            challengers[stage] += 1;
-        }
-        
-        // 실패율 계산
-        Map<Integer, Double> fails = new HashMap<>();
-        double total = stages.length;
-        
-        for (int i = 1; i <= N; i++) {
-            if (challengers[i] == 0) {
-                fails.put(i, 0.0);
-            }
-            else {
-                fails.put(i, challengers[i] / total);
-                total -= challengers[i];
-            }
-        }
-        
-        return fails.entrySet().stream()
-                                .sorted((o1, o2) ->
-                                       o1.getValue().equals(o2.getValue()) 
-                                        ? Integer.compare(o1.getKey(), o2.getKey())
-                                       : Double.compare(o2.getValue(), o1.getValue()))
-                                .mapToInt(HashMap.Entry::getKey)
-                                .toArray();
+        return answer;
     }
 }
