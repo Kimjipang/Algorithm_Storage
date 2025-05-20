@@ -3,30 +3,26 @@ import java.util.*;
 class Solution {
     public int[] solution(int[] numbers) {
         /*
-        N의 개수가 최대 100개까지 
-        
-        TreeSet을 이용해서 풀이해보자.
+        [풀이]
+        이중 반복문으로 모든 경우의 수 계산
+        배열 최대 길이 100 이기 때문에 최대 연산 수 -> (100 * 99) / 2임
         */
-        Set<Integer> set_num = new TreeSet<>();
-        List<Integer> list = new ArrayList<>();
+        ArrayList<Integer> answer = new ArrayList<>();
         
-        int len = numbers.length;
+        int n = numbers.length; // 연산 횟수 1
         
-        for (int i = 0; i < len; i++) {
-            for (int j = i + 1; j < len; j++) {
-                set_num.add(numbers[i] + numbers[j]);
+        for (int i = 0; i < n - 1; i++) { // 연산 횟수 n - 1;
+            for (int j = i + 1; j < n; j++) { // 연산 횟수 n - 1;
+                answer.add(numbers[i] + numbers[j]); // 연산 횟수 1
             }
         }
         
-        for (Integer number : set_num) {
-            list.add(number);
-        }
+        int[] result = answer.stream()
+                            .distinct() // 연산 횟수 n
+                            .sorted() // 연산 횟수 n*log(n)
+                            .mapToInt(Integer::intValue) // 연산횟수 n
+                            .toArray(); // 연산횟수 n
         
-        int[] answer = new int[list.size()];
-        
-        for (int i = 0; i < list.size(); i++) {
-            answer[i] = list.get(i);
-        }
-        return answer;
+        return result;
     }
 }
