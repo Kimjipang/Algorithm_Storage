@@ -1,34 +1,44 @@
 import java.util.*;
 
 class Solution {
-    boolean solution(String s) {
-        /*
-        스택을 만들고, s를 순회한다.
-        괄호짝이 나오면 pop() 2번하고, 짝이 없으면 push()
-        순회가 끝나고 stack에 길이가 0이면 true 반환
+    private static ArrayDeque<Character> stack;
+    
+    private static boolean isCorrect(String s) {
+        int n = s.length();
         
-        제한 사항 100,000 
-        */
-        Stack<Character> stack = new Stack<>();
-        int len = s.length();
-        boolean answer = true;
-        
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < n; i++) {
             char ch = s.charAt(i);
             
-            if (ch == '(') stack.push(ch);
-            
-            else {
-                if (!stack.isEmpty() && stack.peek() == '(') {
-                    stack.pop();
-                }
+            if (ch == ')') {
+                if (stack.isEmpty()) return false;
                 else {
-                    stack.push(ch);
+                    if (stack.peek() == '(') stack.pop();
                 }
             }
+            
+            else stack.push(ch);
         }
-
-        answer = stack.isEmpty();
+        
+        return stack.size() == 0 ? true : false;
+        
+    }
+    boolean solution(String s) {
+        /*
+        s 길이 최대 100,000이기에 O(N^2) 미만의 시간 복잡도로 해결해야 함.
+        
+        [풀이]
+        • 스택 선언
+        • 스택이 비어있을 때
+            • 닫힌 괄호면 false 반환
+            • 열린 괄호면 일단 스택에 push
+        • 스택이 안 비어있을 때
+            • peek()한 값이 닫힌 괄호면 false
+            • 열린 괄호면 pop()
+        • 마지막에 스택 비어있으면 true
+        */
+        stack = new ArrayDeque<>();
+        
+        boolean answer = isCorrect(s);
 
         return answer;
     }
