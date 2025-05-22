@@ -1,36 +1,47 @@
 import java.util.*;
 
 class Solution {
-    
-    private static boolean isValidMove(int dx, int dy) {
-        return 0 <= dx && dx < 11 && 0 <= dy && dy < 11;
-    }
-    
-    private static final Map<Character, int[]> location = new HashMap<>();
-    
-    private static void initLocation() {
-        location.put('U', new int[] {0, 1});
-        location.put('D', new int[] {0, -1});
-        location.put('L', new int[] {-1, 0});
-        location.put('R', new int[] {1, 0});
+    private static HashMap<String, int[]> direction;
+    private static HashSet<String> answer;
+    private static boolean isAvailableMove(int x, int y) {
+        if (x >= 0 && y >= 0 && x < 11 && y < 11) return true;
+        
+        return false;
+        
     }
     
     public int solution(String dirs) {
-        initLocation();
-        int x = 5, y = 5;
-        Set<String> answer = new HashSet<>();
+        /*
+        좌표평면을 10 X 10 크기로 만든다.
+        배열은 음수 인덱스가 없기에 원점을 (5, 5)로 둔다.
+        */
+        answer = new HashSet<>();
+        direction = new HashMap<>();
         
-        for (int i = 0; i < dirs.length(); i++) {
-            int[] offset = location.get(dirs.charAt(i));
-            int dx = x + offset[0];
-            int dy = y + offset[1];
-            if (!isValidMove(dx, dy)) continue;
+        direction.put("U", new int[] {0, 1});
+        direction.put("D", new int[] {0, -1});
+        direction.put("R", new int[] {1, 0});
+        direction.put("L", new int[] {-1, 0});
+        
+        
+        String[] arr = dirs.split("");
+        int curX = 5;
+        int curY = 5;
+        
+        for (String to : arr) {
+            int[] info = direction.get(to);
+            int nextX = curX + info[0];
+            int nextY = curY + info[1];
             
-            answer.add(x + " " + y + " " + dx + " " + dy);
-            answer.add(dx + " " + dy + " " + x + " " + y);
+            if (!isAvailableMove(nextX, nextY)) {
+                continue;
+            }
             
-            x = dx;
-            y = dy;
+            answer.add(curX + " " + curY + ", " + nextX + " " + nextY);
+            answer.add(nextX + " " + nextY + ", " + curX + " " + curY);
+            
+            curX = nextX;
+            curY = nextY;
         }
         
         return answer.size() / 2;
