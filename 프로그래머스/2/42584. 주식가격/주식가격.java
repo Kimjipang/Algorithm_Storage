@@ -1,29 +1,42 @@
 import java.util.*;
 
 class Solution {
-    public int[] solution(int[] prices) {
-        /*
-        prices의 길이가 최대 100,000이기 때문에 O(N^2) 불가.
-        */
-        int len = prices.length;
-        int[] answer = new int[len];
+    private static ArrayDeque<Integer> stack;
+    
+    private static int[] calculatePrices(int[] prices) {
+        int n = prices.length;
+        int[] answer = new int[n];
         
-        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        stack = new ArrayDeque<>();
+
         
-        stack.addLast(0);
+        if (n == 2) return new int[] {1, 0};
         
-        for (int i = 1; i < len; i++) {
-            while (!stack.isEmpty() && prices[i] < prices[stack.peekLast()]) {
-                int j = stack.pollLast();
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && prices[i] < prices[stack.peek()])  {
+                int j = stack.pop();
                 answer[j] = i - j;
             }
-            stack.addLast(i);
+            stack.push(i);
         }
         
         while (!stack.isEmpty()) {
-            int j = stack.pollLast();
-            answer[j] = len - 1 - j;
+            int j = stack.pop();
+            
+            answer[j] = n - 1 - j;
         }
+        
+        return answer;
+    }
+    
+    public int[] solution(int[] prices) {
+        /*
+        prices 최대 길이 100,000이기에 O(N^2)미만의 시간 복잡도로 해결
+        
+        [풀이]
+        
+        */
+        int[] answer = calculatePrices(prices);
         
         return answer;
     }
