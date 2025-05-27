@@ -1,30 +1,49 @@
 import java.util.*;
 
 class Solution {
-    public String solution(String[] cards1, String[] cards2, String[] goal) {
-        /*
-        cards1, cards2의 최대 길이는 10
-        
-        1. cards1, cards2를 큐에 저장
-        2. goal을 순회하면서 cards1 or cards2 맨 앞 요소에 원하는 것이 있으면 goal에서 제거
-        2-1. 없으면 바로 "No" 반환
-        2-2. 있으면 순회 이후 "Yes" 반환
-        */ 
-        ArrayDeque<String> card1 = new ArrayDeque<>(Arrays.asList(cards1)); // cards1 큐로 초기화
-        ArrayDeque<String> card2 = new ArrayDeque<>(Arrays.asList(cards2)); // cards2 큐로 초기화
-        
-        for (String str : goal) {
-            String card1_word = card1.peekFirst();
-            String card2_word = card2.peekFirst();
-            if (!card1.isEmpty() && card1_word.equals(str)) {
-                card1.pollFirst();
+    private static ArrayDeque<String> cardDeque1;
+    private static ArrayDeque<String> cardDeque2;
+    private static ArrayDeque<String> goalDeque;
+    
+    private static String calculate() {
+        while (!goalDeque.isEmpty()) { // N 최대 20
+            
+            String card1 = cardDeque1.peekFirst();
+            String card2 = cardDeque2.peekFirst();
+            String word = goalDeque.peekFirst();
+            
+            if (!cardDeque1.isEmpty() && card1.equals(word)) {
+                cardDeque1.pollFirst();
+                goalDeque.pollFirst();
             }
-            else if (!card2.isEmpty() && card2_word.equals(str)) {
-                card2.pollFirst();
+            else if (!cardDeque2.isEmpty() && card2.equals(word)) {
+                cardDeque2.pollFirst();
+                goalDeque.pollFirst();
             }
-            else return "No";
+            
+            else break;
         }
         
-        return "Yes";
+        return goalDeque.size() == 0 ? "Yes" : "No";
+    }
+    
+    public String solution(String[] cards1, String[] cards2, String[] goal) {
+        /*
+        cards1, cards2 두 배열 모두 최대 길이가 10
+        시간 복잡도면에서 여유로움 
+        
+        [풀이]
+        1. goal 배열에 앞에서부터 하나씩 cards1과 cards2 중 있는지 확인하고 있으면 뺌.
+        2. 안 빼지면 "No"
+        */
+        String answer = "";
+        
+        cardDeque1 = new ArrayDeque<>(Arrays.asList(cards1)); // N 최대 10
+        cardDeque2 = new ArrayDeque<>(Arrays.asList(cards2)); // N 최대 10
+        goalDeque = new ArrayDeque<>(Arrays.asList(goal)); // N 최대 20
+        
+        answer = calculate();
+        
+        return answer;
     }
 }
