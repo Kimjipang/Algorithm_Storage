@@ -5,7 +5,7 @@ class Solution {
         /*
         id_list의 최대 길이 1,000
         report의 최대 길이 200,000
-        
+
         1. 신고 당한 횟수를 담는 해시맵(respondent) 선언
         2. 누굴 신고했는지를 담는 해시맵(reporter) 선언 - 한 사람이 같은 사람을 중복으로 신고하는 것 카운                                                  트 X하기 위함
         2-1. 신고자가 이미 이전에 신고를 했으면 신고 횟수 카운트 X
@@ -16,7 +16,7 @@ class Solution {
         HashMap<String, Integer> count = new HashMap<>();
         int n = id_list.length;
         int[] answer = new int[n];
-        
+
         for (String str : report) {
             String[] arr = str.split(" ");
             String reporterId = arr[0];
@@ -26,7 +26,7 @@ class Solution {
             }
             reportedUser.get(reportedId).add(reporterId);
         }
-        
+
         for (Map.Entry<String, HashSet<String>> entry : reportedUser.entrySet()) {
             if (entry.getValue().size() >= k) {
                 for (String id : entry.getValue()) {
@@ -34,11 +34,11 @@ class Solution {
                 }
             }
         }
-        
+
         for (int i = 0; i < n; i++) {
             answer[i] = count.getOrDefault(id_list[i], 0);
         }
-        
+
         return answer;
     }
 }
