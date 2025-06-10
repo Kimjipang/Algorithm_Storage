@@ -1,36 +1,49 @@
 import java.util.*;
 
 class Solution {
+    private static HashSet<String> used;
+    
+    private static boolean isAvailable(String preWord, String curWord) {
+        boolean isSameChar = preWord.charAt(preWord.length() - 1) == curWord.charAt(0);
+        
+        return isSameChar && !used.contains(curWord);
+        
+    }
+    private static int[] findDropOut(String[] words, int n) {
+        int num = words.length;
+        int round = 1;
+        used.add(words[0]);
+        
+        for (int i = 1; i < num; i++) {
+            String preWord = words[i - 1];
+            String curWord = words[i];
+            
+            if (i % n == 0) round++;
+            
+            if (!isAvailable(preWord, curWord)) {
+                return new int[] {i % n + 1, round};
+            }
+            
+            used.add(curWord);
+            
+        }
+        return new int[] {0, 0};
+    }
+    
     public int[] solution(int n, String[] words) {
         /*
-        words의 길이는 최대 100 O(N^2) 가능
+        n은 최대 10
+        words의 최대 길이 100
         
-        1. set을 하나 만들고, words를 순회
-        2-1. set에 값이 있으면 탈락자 반환
-        2-2. 없으면 set에 집어 넣음.
-        
+        [풀이]
+        - 이미 나온 단어 거르기 위한 set 초기화
+        - 이전 단어의 끝과 다음 단어의 시작이 같은지 + set에 없는지 확인
+            - true면 쭉 순회, false면 몇 번째 사람이 몇 번째 사이클에 탈락인지 반환
         */
-        int[] answer = {0, 0};
+        used = new HashSet<>();
         
-        Set<String> set = new HashSet<>();
-        set.add(words[0]);
+        int[] answer = findDropOut(words, n);
         
-        int len = words.length;
-        int count = n;
-        for (int i = 1; i < len; i++) { // words 순회
-            String word = words[i];
-            char last_alphabet = words[i - 1].charAt(words[i - 1].length() - 1);
-            count++;
-            
-            // 전에 나온 적이 있는 단어이거나 끝말이 이어지지 않은 단어 체크
-            if (set.contains(word) || last_alphabet != word.charAt(0)) {
-                answer[0] = (i % n) + 1;
-                answer[1] = count / n; 
-                break;
-            }
-            set.add(word);
-        }
-
         return answer;
     }
 }
