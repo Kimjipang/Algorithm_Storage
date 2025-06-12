@@ -1,47 +1,36 @@
 import java.util.*;
 
 class Solution {
-    static int n, m;
-    static int[] dx = {0, 0, -1, 1};
-    static int[] dy = {-1, 1, 0, 0};
-    static boolean[][] visited;
-
     public int solution(int[][] maps) {
-        n = maps.length;
-        m = maps[0].length;
-        visited = new boolean[n][m];
+        int rows = maps.length;
+        int cols = maps[0].length;
 
-        return bfs(0, 0, maps);
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; 
 
-    }
-    private static int bfs(int x, int y, int[][] maps) {
         Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[] {x, y, 1});
-        visited[x][y] = true;
+        queue.offer(new int[]{0, 0, 1});
 
+        while (!queue.isEmpty()) {
+            int[] current = queue.poll();
+            int row = current[0];
+            int col = current[1];
+            int distance = current[2];
 
-        while(!queue.isEmpty()) {
-            int[] arr = queue.poll();
-            int curX = arr[0];
-            int curY = arr[1];
-            int count = arr[2];
-
-            if (curX == n - 1 && curY == m - 1) {
-                return count;
+            if (row == rows - 1 && col == cols - 1) {
+                return distance; // 목적지에 도달한 경우 최단거리 반환
             }
 
-            for (int i = 0; i < 4; i++) {
-                int nextX = curX + dx[i];
-                int nextY = curY + dy[i];
+            for (int[] dir : directions) {
+                int newRow = row + dir[0];
+                int newCol = col + dir[1];
 
-                if (nextX >= 0 && nextY >= 0 && nextX < n && nextY < m) {
-                    if (maps[nextX][nextY] == 1 && !visited[nextX][nextY]) {
-                        queue.add(new int[] {nextX, nextY, count + 1});
-                        visited[nextX][nextY] = true;
-                    }
+                if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && maps[newRow][newCol] == 1) {
+                    maps[newRow][newCol] = 0;
+                    queue.offer(new int[]{newRow, newCol, distance + 1});
                 }
             }
         }
+
         return -1;
     }
 }
