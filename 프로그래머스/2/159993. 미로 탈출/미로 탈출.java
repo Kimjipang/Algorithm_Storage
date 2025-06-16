@@ -1,45 +1,33 @@
 import java.util.*;
 
 class Solution {
-    private static int leverX, leverY, startX, startY, exitX, exitY;
-    private static char[][] map;
+    private static String[] maze;
+    private static boolean[][] visited;
+    private static int row, col;
+    private static ArrayDeque<int[]> queue;
+    private static int[] dx = {-1, 1, 0, 0};
+    private static int[] dy = {0, 0, -1, 1};
     
-    private static void findPosition() {
-        int n = map.length;
-        int m = map[0].length;
-        
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                char ch = map[i][j];
-                
-                if (ch == 'S') {
-                    startX = i;
-                    startY = j;
-                }
-                else if (ch == 'L') {
-                    leverX = i;
-                    leverY = j;
-                }                
-                else if (ch == 'E') {
-                    exitX = i;
-                    exitY = j;
-                }
+    private static int[] findDestination(char ch) {
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (maze[i].charAt(j) == ch) return new int[] {i, j};
             }
         }
+        return new int[] {0, 0};
     }
     
-    private static int bfs(int fromX, int fromY, int toX, int toY) {
-        int n = map.length;
-        int m = map[0].length;
+    private static int toDestination(int[] from, int[] to) {
+        visited = new boolean[row][col];
+        queue = new ArrayDeque<>();
         
-        int[] dx = {-1, 1, 0, 0};
-        int[] dy = {0, 0, -1, 1};
+        int startX = from[0];
+        int startY = from[1];
+        int toX = to[0];
+        int toY = to[1];
         
-        ArrayDeque<int[]> queue = new ArrayDeque<>();
-        boolean[][] visited = new boolean[n][m];
-        
-        queue.addLast(new int[] {fromX, fromY, 0});
-        visited[fromX][fromY] = true;
+        queue.addLast(new int[] {startX, startY, 0});
+        visited[startX][startY] = true;
         
         while (!queue.isEmpty()) {
             int[] arr = queue.pollFirst();
@@ -47,44 +35,47 @@ class Solution {
             int curY = arr[1];
             int count = arr[2];
             
-            if (curX == toX && curY == toY) {
-                return count;
-            }
+            if (curX == toX && curY == toY) return count;
             
             for (int i = 0; i < 4; i++) {
                 int nextX = curX + dx[i];
                 int nextY = curY + dy[i];
                 
-                if (nextX >= 0 && nextY >= 0 && nextX < n && nextY < m) {
-                    if (!visited[nextX][nextY] && map[nextX][nextY] != 'X') {
-                        queue.addLast(new int[] {nextX, nextY, count + 1});
+                if (nextX >= 0 && nextX < row && nextY >= 0 && nextY < col) {
+                    if (!visited[nextX][nextY] && maze[nextX].charAt(nextY) != 'X') {
                         visited[nextX][nextY] = true;
+                        queue.addLast(new int[] {nextX, nextY, count + 1});
                     }
                 }
             }
         }
+        
         return -1;
     }
+    
+    
     public int solution(String[] maps) {
-        int n = maps.length;
-        int m = maps[0].length();
+        /*
+        maps 최대 100 X 100
         
-        map = new char[n][m];
+        [풀이]
+        레버를 당기고 탈출 가능
+        레버까지 최단 거리 구하고, 레버에서 탈출구까지 최단 거리 구해서 합하기
+        */
+        maze = maps;
+        row = maps.length;
+        col = maps[0].length();
+
         
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                map[i][j] = maps[i].charAt(j);
-            }
-        }
+        int[] start = findDestination('S');
+        int[] lever = findDestination('L');
+        int[] exit = findDestination('E');
         
-        findPosition();
+        int toLever = toDestination(start, lever);
+        int toExit = toDestination(lever, exit);
         
-        int toLeverDist = bfs(startX, startY, leverX, leverY);
-        int toExitDist = bfs(leverX, leverY, exitX, exitY);
-        System.out.println(toLeverDist + ", " + toExitDist);
+        if (toLever == -1 || toExit == -1) return -1;
         
-        if (toLeverDist == -1 || toExitDist == -1) return -1;
-        
-        return toLeverDist + toExitDist;
+        return toLever + toExit;
     }
 }
