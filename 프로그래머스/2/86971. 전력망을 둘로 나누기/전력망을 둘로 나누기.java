@@ -2,54 +2,80 @@ import java.util.*;
 
 class Solution {
     private static ArrayList<Integer>[] adjList;
+    private static ArrayDeque<Integer> queue;
     private static boolean[] visited;
-    private static int N, answer;
+    private static int N;
     
-    private static int dfs(int start) {
-        visited[start] = true;
-        int sum = 0;
+    private static void init(int[][] wires) {
         
-        for (int next : adjList[start]) {
-            if (!visited[next]) {
-                int cnt = dfs(next);
-                answer = Math.min(answer, Math.abs(N - cnt * 2));
-                
-                sum += cnt;
-            }
-        }
-        return sum + 1;
-    }
-    
-    public int solution(int n, int[][] wires) {
-        /*
-        n의 개수는 최대 100
-        O(N^3)까지도 가능
+        adjList = new ArrayList[N + 1];
         
-        [풀이]
-        1. 인접리스트 생성
-        2. 그냥 하나씩 끊어보기..?
-        */
-        answer = n - 1;
-        N = n;
-        
-        adjList = new ArrayList[n + 1];
-        
-        // 인접리스트 초기화
-        for (int i = 0; i <= n; i++) {
+        for (int i = 1; i <= N; i++) {
             adjList[i] = new ArrayList<>();
         }
         
         for (int[] wire : wires) {
-            int idx = wire[0];
-            int edge = wire[1];
+            int edge1 = wire[0];
+            int edge2 = wire[1];
             
-            adjList[idx].add(edge);
-            adjList[edge].add(idx);
+            adjList[edge1].add(edge2);
+            adjList[edge2].add(edge1);
         }
         
-        visited = new boolean[n + 1];
-        dfs(1);
-               
+    }
+    
+    private static int bfs(int start) {
+        queue = new ArrayDeque<>();
+        visited = new boolean[N + 1];
+        
+        queue.addLast(start);
+        visited[start] = true;
+        int count = 1;
+        
+        while (!queue.isEmpty()) {
+            int cur = queue.pollFirst();
+            
+            for (int num : adjList[cur]) {
+                if (!visited[num]) {
+                    queue.addLast(num);
+                    visited[num] = true;
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    
+    public int solution(int n, int[][] wires) {
+        /*
+        n 최대 100, wires 최대 길이 99
+        
+        [풀이]
+        - 인접리스트 초기화
+        - dfs로 인접 리스트 순회하면서 방문할 때마다 카운트
+        - 임의로 1개씩 끊어서 전선 개수의 차이를 계산
+        - 최소차이 반환
+        */
+        N = n;
+        init(wires);
+        int answer = n;
+        
+        for (int i = 0; i < n - 1; i++) {
+            int u = wires[i][0];
+            int v = wires[i][1];
+            
+            adjList[u].remove(Integer.valueOf(v));
+            adjList[v].remove(Integer.valueOf(u));
+            
+            int cnt1 = bfs(1);
+            int cnt2 = N - cnt1;
+            
+            answer = Math.min(answer, Math.abs(cnt1 - cnt2));
+            
+            adjList[u].add(v);
+            adjList[v].add(u);
+        }
+        
         return answer;
     }
 }
