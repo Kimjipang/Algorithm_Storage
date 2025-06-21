@@ -2,23 +2,26 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] array, int[][] commands) {
-        int n = commands.length;
+        int[] result = new int[commands.length];
         
-        ArrayList<Integer> list = new ArrayList<>();
-        
-        for (int[] command : commands) {
-            int from = command[0] - 1;
-            int to = command[1];
-            int idx = command[2] - 1;
+        for (int i = 0; i < commands.length; i++) {
+            int from = commands[i][0] - 1;
+            int to = commands[i][1];
+            int k = commands[i][2];
             
-            int[] copiedArr = Arrays.copyOfRange(array, from, to); 
+            // 최대 힙 (내림차순 Comparator 사용)
+            PriorityQueue<Integer> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o2, o1));
             
-            Arrays.sort(copiedArr);
-            list.add(copiedArr[idx]);
+            for (int j = from; j < to; j++) {
+                pq.offer(array[j]);
+                if (pq.size() > k) {
+                    pq.poll(); // 가장 큰 값 제거 → k개 유지
+                }
+            }
+            
+            result[i] = pq.peek(); // k번째 작은 수
         }
         
-        return list.stream()
-                    .mapToInt(Integer::intValue)
-                    .toArray();
+        return result;
     }
 }
