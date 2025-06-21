@@ -4,26 +4,20 @@ class Solution {
     public int[] solution(int[] array, int[][] commands) {
         int n = commands.length;
         
-        ArrayList<Integer> answer = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
         
         for (int[] command : commands) {
-            int start = command[0];
-            int end = command[1];
-            int target = command[2];
+            int from = command[0] - 1;
+            int to = command[1];
+            int idx = command[2] - 1;
             
-            ArrayList<Integer> list = new ArrayList<>();
+            int[] copiedArr = Arrays.copyOfRange(array, from, to); 
             
-            for (int i = start - 1; i < end; i++) {
-                list.add(array[i]);
-            }
-            
-            Collections.sort(list);
-            
-            answer.add(list.get(target - 1));
+            Arrays.sort(copiedArr);
+            list.add(copiedArr[idx]);
         }
         
-        
-        return answer.stream()
+        return list.stream()
                     .mapToInt(Integer::intValue)
                     .toArray();
     }
