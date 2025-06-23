@@ -12,7 +12,7 @@ class Solution {
             arr[i] = String.valueOf(numbers[i]);
         }
         
-        Arrays.sort(arr, (o1, o2) -> (o2 + o1).compareTo(o1 + o2));
+        Arrays.sort(arr, (o1, o2) -> Integer.compare(Integer.parseInt(o2 + o1), Integer.parseInt(o1 + o2)));
         
         if (arr[0].equals("0")) return "0";
         
