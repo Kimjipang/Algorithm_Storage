@@ -1,22 +1,26 @@
-
 import java.util.*;
 
 class Solution {
     public boolean solution(String[] phone_book) {
         /*
-        배열 최대 길이 100만이기에 O(N^2) 불가
+        phone_book 최대 길이 1,000,000이기에 O(N^2) 미만으로 해결
         
+        [풀이]
+        - 문자열 오름차순 정렬
+        - 앞뒤로 접두사인지 확인
+        */      
+        Arrays.sort(phone_book); // O(NlogN)
+        int num = phone_book.length;
         
-        */
-        boolean answer = true;
+        // System.out.println(Arrays.toString(phone_book));
         
-        Arrays.sort(phone_book);
-        int n = phone_book.length;
-        
-        for (int i = 0; i < n - 1; i++) {
-            if (phone_book[i + 1].startsWith(phone_book[i])) answer = false;
+        for (int i = 0; i < num - 1; i++) { // O(N)
+            String cur = phone_book[i];
+            String next = phone_book[i + 1];
+            
+            if (next.startsWith(cur)) return false;
         }
-    
-        return answer;
+
+        return true;
     }
 }
