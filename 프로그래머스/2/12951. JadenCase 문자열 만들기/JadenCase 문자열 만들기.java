@@ -1,26 +1,25 @@
+import java.util.*;
+
 class Solution {
     public String solution(String s) {
-        String answer = "";
+        String lower = s.toLowerCase();
+        StringBuilder sb = new StringBuilder();
         
-        String[] words = s.split(" ");
+        boolean isStart = true; // 현재 문자가 단어의 시작인지
         
-        for (int i = 0; i < words.length; i++) {
+        for (int i = 0; i < lower.length(); i++) {
+            char c = lower.charAt(i);
             
-            if (words[i].length() == 0) {
-                answer += " ";
+            if (isStart && Character.isLetter(c)) {
+                sb.append(Character.toUpperCase(c));
+            } else {
+                sb.append(c);
             }
-            else {
-                answer += words[i].substring(0, 1).toUpperCase();
-                answer += words[i].substring(1).toLowerCase();
-                answer += " ";
-            }
-        }
-        if(s.substring(s.length()-1, s.length()).equals(" ")){
-            return answer;
+            
+            // 공백 다음 문자는 단어 시작
+            isStart = (c == ' ');
         }
         
-        // 맨 마지막 " " 제거 후 반환
-        return answer.substring(0, answer.length()-1);
-    
+        return sb.toString();
     }
 }
